@@ -35,7 +35,7 @@
 
    - Select the best aligned data and/ or datasets (from your [brainstorming](#brainstorming)) and describe how you will curate and transform the data and dataset(s) to address your research problem and statement. A list of steps and a brief description of each step will suffice.
 
-### Assessing your progress
+## Assessing your progress
 
 1. Reflect on the process of identifying a data preparation strategy.
 

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Shannon Cummings">
+
+<title>Project Step 3: Data Preparation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="data_preparation_files/libs/clipboard/clipboard.min.js"></script>
+<script src="data_preparation_files/libs/quarto-html/quarto.js"></script>
+<script src="data_preparation_files/libs/quarto-html/popper.min.js"></script>
+<script src="data_preparation_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="data_preparation_files/libs/quarto-html/anchor.min.js"></script>
+<link href="data_preparation_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="data_preparation_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="data_preparation_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="data_preparation_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="data_preparation_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Project Step 3: Data Preparation</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Shannon Cummings </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="brainstorming" class="level3">
+<h3 class="anchored" data-anchor-id="brainstorming">Brainstorming</h3>
+<p>As I mentioned in Project Step 2: <em>my goal is to use the standardized project gutenberg corpus as a dataset, then to subset the data first into all works within the genre of science fiction, and then create three subgroups based on time. The first time frame will range from 1990-1945, the second from 1945-1990, and the from 1990-present. The first time frame begins at the turn of the century and ends at the end of WWII. The second time frame begins at the end of WWII and ends with the end of the Cold War. The final time begins at the ed of the Cold war and will include everything available to present day. My Hypothesis is that there will be dramatic thematic differences in the science fiction published in each time frame based on the cultural events that mark the beginning and end of each set</em></p>
+<section id="about-project-gutenberg-and-gutenbergr" class="level4">
+<h4 class="anchored" data-anchor-id="about-project-gutenberg-and-gutenbergr">About Project Gutenberg and <code>gutenbergr</code></h4>
+<p>Based on reading and work done for lab 5, Project Gutenberg consists of a digital archive of cultural works, and the Standardized Project Gutenberg Corpus (SPGC) is a complete curarion of more than 50,000 books</p>
+</section>
+</section>
+<section id="draft-a-preparation-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="draft-a-preparation-strategy">Draft a preparation strategy</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># data manipulation</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr) <span class="co"># data import/ export</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gutenbergr) <span class="co"># Project Gutenberg API</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)      <span class="co"># descriptive statistics</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)      <span class="co"># tables</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)    <span class="co"># plotting</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext) <span class="co"># text processing</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(gutenberg_subjects)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 231,741
+Columns: 3
+$ gutenberg_id &lt;int&gt; 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, …
+$ subject_type &lt;chr&gt; "lcsh", "lcsh", "lcc", "lcc", "lcsh", "lcsh", "lcc", "lcc…
+$ subject      &lt;chr&gt; "United States -- History -- Revolution, 1775-1783 -- Sou…</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>subjects_df <span class="ot">&lt;-</span>gutenberg_subjects</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(subjects_df, <span class="st">"data/gutenberg_subjects.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I just made an original dataframe that includes all of the subjects for each work. By reading the description of the <code>gutenbergr</code> package, I can see that <code>gutenberg_subjects</code> includes a column for <code>gutenberg_id</code> which can be joined with <code>gutenberg_metadata</code>. So, my next step is to join the two sets of data so that I can see the publication.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(gutenberg_metadata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 72,569
+Columns: 8
+$ gutenberg_id        &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,…
+$ title               &lt;chr&gt; "The Declaration of Independence of the United Sta…
+$ author              &lt;chr&gt; "Jefferson, Thomas", "United States", "Kennedy, Jo…
+$ gutenberg_author_id &lt;int&gt; 1638, 1, 1666, 3, 1, 4, NA, 3, 3, NA, 7, 7, 7, 8, …
+$ language            &lt;chr&gt; "en", "en", "en", "en", "en", "en", "en", "en", "e…
+$ gutenberg_bookshelf &lt;chr&gt; "Politics/American Revolutionary War/United States…
+$ rights              &lt;chr&gt; "Public domain in the USA.", "Public domain in the…
+$ has_text            &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TR…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>metadata_df <span class="ot">&lt;-</span>gutenberg_metadata</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(metadata_df, <span class="st">"data/gutenberg_metadata.csv"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge based on Gutenberg ID (gutenberg_id column)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>combined_data <span class="ot">&lt;-</span> <span class="fu">merge</span>(metadata_df, subjects_df, <span class="at">by =</span> <span class="st">"gutenberg_id"</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, there is a problem of “publication date.” I haven’t been able to find publication dates anywhere in the metadata, so I might have to adapt my strategy and use authors as a proxy for publication date. What I am going to do now is combine the <code>gutenberg_authors</code> data with the combined dataset I just created.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(gutenberg_authors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 23,980
+Columns: 7
+$ gutenberg_author_id &lt;int&gt; 1, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1…
+$ author              &lt;chr&gt; "United States", "Lincoln, Abraham", "Henry, Patri…
+$ alias               &lt;chr&gt; "U.S.A.", NA, NA, NA, "Dodgson, Charles Lutwidge",…
+$ birthdate           &lt;int&gt; NA, 1809, 1736, 1849, 1832, NA, 1819, 1860, NA, 18…
+$ deathdate           &lt;int&gt; NA, 1865, 1799, 1931, 1898, NA, 1891, 1937, NA, 18…
+$ wikipedia           &lt;chr&gt; "https://en.wikipedia.org/wiki/United_States", "ht…
+$ aliases             &lt;chr&gt; "U.S.A.", "United States President (1861-1865)/Lin…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>authors_df <span class="ot">&lt;-</span>gutenberg_authors</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(authors_df, <span class="st">"data/gutenberg_authors.csv"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge based on Author ID (gutenberg_id column)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>authors_combined_data <span class="ot">&lt;-</span> <span class="fu">merge</span>(authors_df, combined_data, <span class="at">by =</span> <span class="st">"gutenberg_author_id"</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="now-i-need-to-figure-out-how-to-filter-the-data" class="level4">
+<h4 class="anchored" data-anchor-id="now-i-need-to-figure-out-how-to-filter-the-data">Now I need to figure out how to filter the data</h4>
+<ol class="example" type="1">
+<li>What data from from the complete <code>authors_compiled_data</code> do I NOT need:</li>
+</ol>
+<ul>
+<li>anything with the USA as the author</li>
+<li>I dont think I need aliases?</li>
+<li>ANything written by an author born before probably 1850
+<ul>
+<li>this would make them about 50 by the year 1900 which is when I wanted my first timeframe to begin</li>
+</ul></li>
+</ul>
+<p>I need to figure out a way to group all of the different fiction-like subjects from <code>subjects_df</code> together under some general fiction tag. Then, I need to determine what data I know I</p>
+</section>
+<section id="change-of-plans" class="level4">
+<h4 class="anchored" data-anchor-id="change-of-plans">Change of plans?</h4>
+<p>So I was exploring the <code>authors_compiled_data</code> a bit more and I saw that there is a column called <code>gutenberg_bookshelf</code>. What I am going to do now is maybe filter that column to see what all of the available bookshelves are that I can sort through. I went on the gutenberg.org website and saw that there are a few main bookshelves, one including Fiction. Under Fiction, there are two more “specific” bookhelves that I am interested in: Science Fiction and Precursors of Science Fiction. If these are under the <code>gutenberg_bookshelves</code> column, then I think my process got a little simpler than what I was trying to make it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter works where 'gutenberg_bookshelf' contain 'Fiction'</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>fiction_metadata <span class="ot">&lt;-</span> metadata_df[<span class="fu">grep</span>(<span class="st">"Fiction"</span>, metadata_df<span class="sc">$</span>gutenberg_bookshelf, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View the subsetted dataframe</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fiction_metadata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 8
+  gutenberg_id title     author gutenberg_author_id language gutenberg_bookshelf
+         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;                &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;              
+1           35 "The Tim… Wells…                  30 en       Movie Books/Scienc…
+2           36 "The War… Wells…                  30 en       Movie Books/Scienc…
+3           42 "The Str… Steve…                  35 en       Precursors of Scie…
+4           43 "The Str… Steve…                  35 en       Precursors of Scie…
+5           62 "A Princ… Burro…                  48 en       Best Books Ever Li…
+6           63 "The Num… Unkno…                  49 en       Historical Fiction 
+# ℹ 2 more variables: rights &lt;chr&gt;, has_text &lt;lgl&gt;</code></pre>
+</div>
+</div>
+<p>Ugh ok. The table is showing that there are 8 works tagged as Fiction, but I know that this can’t be true. On the website, it shows there are 1341 books tagged as Science Fiction, 55 books tagged as Science Fiction by Women, and 36 that are Precursors to Science Fiction. What I am going to try now is to see if I can ask for it to filter bookshelves that contain some variation of Science Fiction, even if there are other words in the bookshelf.</p>
+<p>I couldnt figure out how to do this, so I asked chatGPT and this is what it told me to do: If you want to create a dataset containing works that have the words “science fiction” somewhere within the gutenberg_bookshelves column, even if they are part of a longer string or surrounded by other words, you can use regular expressions (regex) in R to perform a more flexible search. Here’s how you can accomplish this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter works with 'science fiction' in bookshelf (using grepl with ignore.case)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>science_fiction_metadata <span class="ot">&lt;-</span> metadata_df[<span class="fu">grepl</span>(<span class="st">"science</span><span class="sc">\\</span><span class="st">s+fiction"</span>, metadata_df<span class="sc">$</span>gutenberg_bookshelf, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View the subsetted dataframe</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(science_fiction_metadata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 8
+  gutenberg_id title     author gutenberg_author_id language gutenberg_bookshelf
+         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;                &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;              
+1           35 The Time… Wells…                  30 en       Movie Books/Scienc…
+2           36 The War … Wells…                  30 en       Movie Books/Scienc…
+3           42 The Stra… Steve…                  35 en       Precursors of Scie…
+4           43 The Stra… Steve…                  35 en       Precursors of Scie…
+5           62 A Prince… Burro…                  48 en       Best Books Ever Li…
+6           64 The Gods… Burro…                  48 en       Science Fiction    
+# ℹ 2 more variables: rights &lt;chr&gt;, has_text &lt;lgl&gt;</code></pre>
+</div>
+</div>
+<p>Another problem: I know there are more than 8 works with Science Fiction somewhere in the bookshelf. What am I supposed to do to get the rest???</p>
+<p>When I click the <code>metadata_df</code> in the environment tab, I am able to filter the column to show works with Science Fiction anywhere in the bookshelf tag like if I did command F on a PDF and it highlighted Science Fiction everywhere it was found, regardless of the surrounding words. How do I type a code to make a dataset that contains only the works that ome up when I filter the dataset that way??????</p>
+<p>WAIT. I DONT KNOW IF THIS IS AN ISSUE WITH JUST THE PREVIEW DISPLAYED HERE BUT WHEN I CLICKED <code>science_fiction_metadata</code> it showed there are 1437 observations. I dont know what mess I created with all of this extra code, but what I want to do is save this data as a csv file so I can access it later.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(science_fiction_metadata, <span class="st">"data/science_fiction_metadata.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>YAY IT WORKED.</p>
+</section>
+<section id="deriving-further" class="level4">
+<h4 class="anchored" data-anchor-id="deriving-further">Deriving further</h4>
+<p>Ok, so what I need to do now is to cut down the data more so it fits the parameters I am looking for. Something that also just came to mind is that I plan to try to do semantic or topic modeling to the texts, so I think I am going to also filter out works that are marked as FALSE under the <code>has_text</code> column in the metadata.</p>
+<p>First: I will combine the <code>science_fiction_metadata</code> with some of the columns from <code>authors_df</code>. I want, the authors’ birthdate and deathdates to be included in <code>science_fiction_metadata</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge authors_df with science_fiction_metadata based on gutenberg_author_id</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>merged_scifi_metadata <span class="ot">&lt;-</span> <span class="fu">merge</span>(science_fiction_metadata, authors_df[, <span class="fu">c</span>(<span class="st">"gutenberg_author_id"</span>, <span class="st">"birthdate"</span>, <span class="st">"deathdate"</span>)], </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">by =</span> <span class="st">"gutenberg_author_id"</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># View the merged metadata</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(merged_scifi_metadata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  gutenberg_author_id gutenberg_id                       title
+1                  30           36       The War of the Worlds
+2                  30         8968          The World Set Free
+3                  30         8971 The Island of Doctor Moreau
+4                  30          159 The island of Doctor Moreau
+5                  30        60656        La guerre des mondes
+6                  30         8978      When the Sleeper Wakes
+                         author language
+1 Wells, H. G. (Herbert George)       en
+2 Wells, H. G. (Herbert George)       en
+3 Wells, H. G. (Herbert George)       en
+4 Wells, H. G. (Herbert George)       en
+5 Wells, H. G. (Herbert George)       fr
+6 Wells, H. G. (Herbert George)       en
+                                   gutenberg_bookshelf
+1                          Movie Books/Science Fiction
+2                                      Science Fiction
+3                          Movie Books/Science Fiction
+4 Science Fiction/Best Books Ever Listings/Movie Books
+5                                   FR Science fiction
+6                                      Science Fiction
+                                                                rights has_text
+1                                            Public domain in the USA.     TRUE
+2 Copyrighted. Read the copyright notice inside this book for details.    FALSE
+3 Copyrighted. Read the copyright notice inside this book for details.    FALSE
+4                                            Public domain in the USA.     TRUE
+5                                            Public domain in the USA.    FALSE
+6 Copyrighted. Read the copyright notice inside this book for details.    FALSE
+  birthdate deathdate
+1      1866      1946
+2      1866      1946
+3      1866      1946
+4      1866      1946
+5      1866      1946
+6      1866      1946</code></pre>
+</div>
+</div>
+<p>YAY excellent. Ok now Im going to write this as a csv so i have it for later.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(merged_scifi_metadata, <span class="st">"data/merged_scifi_metadata.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now what I want to do is remove all works whose authors’ birthdate is before 1850.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter merged_scifi_metadata to remove works with authors' birthdate before 1850</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>filtered_birthdate_metadata <span class="ot">&lt;-</span> merged_scifi_metadata[<span class="sc">!</span><span class="fu">is.na</span>(merged_scifi_metadata<span class="sc">$</span>birthdate) <span class="sc">&amp;</span>merged_scifi_metadata<span class="sc">$</span>birthdate <span class="sc">&gt;=</span> <span class="dv">1850</span>, ]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(filtered_birthdate_metadata, <span class="st">"data/filtered_birthdate_metadata.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>YAY great. ok, now I want to filter the data to show only works where the language is en and the has_test is TRUE</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter to include only works where has_text is TRUE and language is 'en'</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>filtered_en_scifi_post_1850 <span class="ot">&lt;-</span> filtered_birthdate_metadata[filtered_birthdate_metadata<span class="sc">$</span>has_text <span class="sc">==</span> <span class="cn">TRUE</span> <span class="sc">&amp;</span> filtered_birthdate_metadata<span class="sc">$</span>language <span class="sc">==</span> <span class="st">'en'</span>, ]</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(filtered_en_scifi_post_1850, <span class="st">"data/filtered_en_scifi_post_1850.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I am now ready to analyse works based on the authors birthdate. Hopefully I will be able to study trends based on time periods.</p>
+</section>
+</section>
+<section id="assessing-progress" class="level3">
+<h3 class="anchored" data-anchor-id="assessing-progress">Assessing progress</h3>
+<p>This step took a great deal of trial and error. I know what I want to see happen with the different dataframes, but so often I dont know how to actually type it out in code and make it happen as I envisioned. ChatGPT has been really helpful because I can explain exactly what data I have and what packages I am using and ask how produce the code for what I am tryign to articulate.</p>
+<p>Because there is no publicatoin date included in <code>gutenbergr</code> I have had to rethink how I want to go about my project. I now have a datatable with all scifi works in english that have full text written by authors born after 1850. What I am going to have to do is instead of look at works published in different eras, I will have to focus on when authors would have been different ages. Authors growing up at the turn of the century, in my hypothesis, will have different perspectives than authors growing up in the cold war. This is going to be how I have to do my analysis</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
